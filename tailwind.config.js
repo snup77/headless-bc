@@ -4,7 +4,13 @@ module.exports = {
     "./components/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        palette: {
+          primary: "#5B21B6"
+        }
+      }
+    },
   },
   plugins: [
     require('@tailwindcss/typography'),
