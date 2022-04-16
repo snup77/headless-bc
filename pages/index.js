@@ -1,12 +1,25 @@
+import { Fragment } from "react"
+import ProductCard from "../components/ProductCard"
+
 export default function Home() {
   return (
-    <div className="text-center">
-      <h1 className="font-bold leading-relaxed text-palette-primary text-5xl mt-4 py-2 sm:py-4">
-        Your Home, Reimagined
-      </h1>
-      <p className="max-w-xl text-center px-2 mx-auto text-base text-lg text-gray-600">
-        Reimagine your living room with our sofas and chairs.
-      </p>
-    </div>
+    <Fragment>
+      <div className="text-center">
+        <h1 className="font-bold leading-relaxed text-palette-primary text-5xl mt-4 py-2 sm:py-4">
+          Your Home, Reimagined
+        </h1>
+        <p className="max-w-xl text-center px-2 mx-auto text-base text-lg text-gray-600">
+          Reimagine your living room with our sofas and chairs.
+        </p>
+      </div>
+      <div className="flex flex-1 flex-wrap flex-row">
+        <ProductCard />
+        <ProductCard />
+        <ProductCard />
+        <ProductCard />
+        <ProductCard />
+        <ProductCard />
+      </div>
+    </Fragment>
   )
 }
