@@ -5,22 +5,21 @@ function ProductCard() {
   return (
     <div
       className="
-    w-100
+    w-full
     md:w-1/2
     lg:w-1/4
-    p1 sm:p-2
+    p-2
   "
     >
-      <Link href={`/`}>
+      <Link href={`/mod-leather-sofa`}>
         <a aria-label="Mod Leather Sofa">
           <div className="h-72 flex justify-center items-center bg-gray-100 hover:bg-gray-200">
-            <div className="flex flex-column justify-center items-center">
+            <div className="flex flex-column justify-center items-center relative w-3/5 h-3/5">
               <Image
                 alt="couch6"
                 src="/couch6.png"
-                className="object-scale-down"
-                width={190}
-                height={190}
+                layout='fill'
+                objectFit='contain'
               />
             </div>
           </div>

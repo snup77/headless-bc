@@ -12,7 +12,7 @@ export default function Home() {
           Reimagine your living room with our sofas and chairs.
         </p>
       </div>
-      <div className="flex flex-1 flex-wrap flex-row">
+      <div className="max-w-7xl flex flex-1 flex-wrap flex-row mx-auto px-6 pt-10">
         <ProductCard />
         <ProductCard />
         <ProductCard />
