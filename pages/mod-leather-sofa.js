@@ -7,14 +7,15 @@ function ProductDetails() {
   return (
     <div
       className="
+        px-4
         sm:py-12
         md:flex-row
         py-4 w-full flex flex-1 flex-col my-0 mx-auto
         max-w-7xl
       "
     >
-      <div className="w-full md:w-1/2 h-120 flex flex-1 bg-gray-100">
-        <div className="py-16 p10 flex flex-1 justify-center items-center w-full h-full relative">
+      <div className="w-full flex flex-1 bg-gray-100">
+        <div className="h-96 py-16 p10 flex flex-1 justify-center items-center w-full h-full relative">
           <Image
             src="/couch6.png"
             alt="Inventory item"

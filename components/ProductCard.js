@@ -7,7 +7,7 @@ function ProductCard() {
       className="
     w-full
     md:w-1/2
-    lg:w-1/4
+    lg:w-1/3
     p-2
   "
     >
