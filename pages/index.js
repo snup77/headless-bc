@@ -1,7 +1,10 @@
 import { Fragment } from "react"
 import ProductCard from "../components/ProductCard"
 
+import { getAllProducts } from "../helpers/shopify"
+
 export default function Home() {
+
   return (
     <Fragment>
       <div className="text-center">
@@ -22,4 +25,16 @@ export default function Home() {
       </div>
     </Fragment>
   )
+}
+
+export async function getStaticProps() {
+  const products = await getAllProducts()
+
+  console.log(products)
+
+  return {
+    props: {
+      products
+    },
+  }
 }
