@@ -3,7 +3,7 @@ import ProductCard from "../components/ProductCard"
 
 import { getAllProducts } from "../helpers/shopify"
 
-export default function Home() {
+export default function Home({ products }) {
 
   return (
     <Fragment>
@@ -16,12 +16,11 @@ export default function Home() {
         </p>
       </div>
       <div className="max-w-7xl flex flex-1 flex-wrap flex-row mx-auto px-6 pt-10">
-        <ProductCard />
-        <ProductCard />
-        <ProductCard />
-        <ProductCard />
-        <ProductCard />
-        <ProductCard />
+      {
+          products.map((product) => (
+            <ProductCard key={product.node.id} product={product} />
+        ))
+      }
       </div>
     </Fragment>
   )
@@ -29,8 +28,6 @@ export default function Home() {
 
 export async function getStaticProps() {
   const products = await getAllProducts()
-
-  console.log(products)
 
   return {
     props: {

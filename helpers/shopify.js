@@ -26,24 +26,28 @@ async function callShopify(query) {
 
 export async function getAllProducts() {
   const query = `{
-        products(first: 21) {
-          edges {
-            node {
-              id
-              title
-              handle
-              featuredImage {
+    products(first: 22) {
+      edges {
+        node {
+          id
+          title
+          handle
+          images(first: 10) {
+            edges {
+              node {
                 url
-              }
-              priceRange {
-                maxVariantPrice {
-                  amount
-                }
               }
             }
           }
+          priceRange {
+            maxVariantPrice {
+              amount
+            }
+          }
         }
-      }`
+      }
+    }
+  }`
   const response = await callShopify(query)
 
   const allProducts = response.data.products.edges

@@ -1,7 +1,14 @@
 import Image from "next/image"
 import Link from "next/link"
 
-function ProductCard() {
+function ProductCard({ product }) {
+
+  const id = product.node.id
+  const handle = product.node.handle
+  const title = product.node.title
+  const image = product.node.images.edges[0].node.url
+  const price = product.node.priceRange.maxVariantPrice.amount.replace(/\.0/g, '')
+
   return (
     <div
       className="
@@ -11,13 +18,13 @@ function ProductCard() {
     p-2
   "
     >
-      <Link href={`/mod-leather-sofa`}>
+      <Link href={`/${handle}`}>
         <a aria-label="Mod Leather Sofa">
           <div className="h-72 flex justify-center items-center bg-gray-100 hover:bg-gray-200">
             <div className="flex flex-column justify-center items-center relative w-3/5 h-3/5">
               <Image
                 alt="couch6"
-                src="/couch6.png"
+                src={image}
                 layout='fill'
                 objectFit='contain'
               />
@@ -27,9 +34,9 @@ function ProductCard() {
       </Link>
       <div>
         <p className="m-4 text-center text-l font-semibold mb-1">
-          Mod Leather Sofa
+          {title}
         </p>
-        <p className="text-center text-gray-700 mb-4">$800</p>
+        <p className="text-center text-gray-700 mb-4">${price}</p>
       </div>
     </div>
   )
