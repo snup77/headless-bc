@@ -1,9 +1,8 @@
 import Image from "next/image"
+import { getProductSlugs, getProduct } from "../helpers/shopify"
 
-function ProductDetails() {
-  const description =
-    "Easy to love. The Sven in birch ivory looks cozy and refined, like a sweater that a fancy lady wears on a coastal vacation. This ivory loveseat has a tufted bench seat, loose back pillows and bolsters, solid walnut legs, and is ready to make your apartment the adult oasis you dream of. Nestle it with plants, an ottoman, an accent chair, or 8 dogs. Your call."
-
+function ProductDetails( { productData }) {
+  
   return (
     <div
       className="
@@ -17,7 +16,7 @@ function ProductDetails() {
       <div className="w-full flex flex-1 bg-gray-100">
         <div className="h-96 py-16 p10 flex flex-1 justify-center items-center w-full h-full relative">
           <Image
-            src="/couch6.png"
+            src={productData.images.edges[0].node.url}
             alt="Inventory item"
             className="object-scale-down max-h-full"
             layout='fill'
@@ -31,10 +30,10 @@ function ProductDetails() {
            sm:mt-0 mt-2 text-5xl font-light leading-large
           "
         >
-          Mod Leather Sofa
+          {productData.title}
         </h1>
-        <h2 className="text-2xl tracking-wide sm:py-8 py-6">$800</h2>
-        <p className="text-gray-600 leading-7">{description}</p>
+        <h2 className="text-2xl tracking-wide sm:py-8 py-6">${productData.priceRange.maxVariantPrice.amount.replace(/\.0/g, '')}</h2>
+        <p className="text-gray-600 leading-7">{productData.description}</p>
         <div className="my-6"></div>
         <button
           className="text-sm font-bold tracking-wider bg-transparent hover:bg-black text-black font-semibold hover:text-white py-4 px-12 border-2 border-black hover:border-transparent w-full"
@@ -45,6 +44,32 @@ function ProductDetails() {
       </div>
     </div>
   )
+}
+
+export async function getStaticPaths() {
+  const productSlugs = await getProductSlugs()
+
+  const paths = productSlugs.map((slug) => {    
+    const product = String(slug.node.handle)
+    return {
+      params: { product }
+    }
+  })
+
+  return {
+    paths,
+    fallback: false,
+  }
+}
+
+export async function getStaticProps({ params }) {
+  const productData = await getProduct(params.product)  
+
+  return {
+    props: {
+      productData,
+    },
+  }
 }
 
 export default ProductDetails

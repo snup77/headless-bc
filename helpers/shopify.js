@@ -56,3 +56,54 @@ export async function getAllProducts() {
 
   return allProducts
 }
+
+export async function getProductSlugs() {
+  const query =
+    `{
+      products(first: 22) {
+        edges {
+          node {
+            handle
+          }
+        }
+      }
+    }`
+
+  const response = await callShopify(query);
+
+  const slugs = response.data.products.edges
+    ? response.data.products.edges
+    : []
+
+  return slugs
+}
+
+export async function getProduct(handle) {
+  const query =
+    `{
+      product(handle: "${handle}") {
+        title
+        description
+        images(first: 10) {
+          edges {
+            node {
+              url
+            }
+          }
+        }
+        priceRange {
+          maxVariantPrice {
+            amount
+          }
+        }
+      }
+    }`
+
+  const response = await callShopify(query);
+
+  const product = response.data.product
+    ? response.data.product
+    : []
+
+  return product
+}
