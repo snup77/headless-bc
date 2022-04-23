@@ -1,7 +1,13 @@
 import Image from "next/image"
-import { getProductSlugs, getProduct } from "../helpers/shopify"
+import { getProductSlugs, getProduct, createCheckout } from "../helpers/shopify"
 
-function ProductDetails( { productData }) {
+function ProductDetails({ productData }) {
+  
+  async function checkout() {
+    const { webUrl } = await createCheckout(productData.variants.edges[0].node.id)
+    window.location.href = webUrl
+
+  }
   
   return (
     <div
@@ -37,9 +43,9 @@ function ProductDetails( { productData }) {
         <div className="my-6"></div>
         <button
           className="text-sm font-bold tracking-wider bg-transparent hover:bg-black text-black font-semibold hover:text-white py-4 px-12 border-2 border-black hover:border-transparent w-full"
-          onClick={() => console.log("Added to Cart")}
+          onClick={checkout}
         >
-          <div>Add to Cart</div>
+          <div>Buy</div>
         </button>
       </div>
     </div>

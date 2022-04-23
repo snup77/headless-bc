@@ -96,6 +96,13 @@ export async function getProduct(handle) {
             amount
           }
         }
+        variants(first: 1) {
+          edges {
+            node {
+              id
+            }
+          }
+        }
       }
     }`
 
@@ -106,4 +113,35 @@ export async function getProduct(handle) {
     : []
 
   return product
+}
+
+export async function createCheckout(variantId) {
+
+  const query =
+    `mutation {
+      checkoutCreate(input: {
+        lineItems: [{ variantId: "${variantId}", quantity: 1 }]
+      }) {
+        checkout {
+           id
+           webUrl
+           lineItems(first: 5) {
+             edges {
+               node {
+                 title
+                 quantity
+               }
+             }
+           }
+        }
+      }
+    }`
+
+  const response = await callShopify(query);
+
+  const checkout = response.data.checkoutCreate.checkout
+    ? response.data.checkoutCreate.checkout
+    : []
+
+  return checkout
 }
