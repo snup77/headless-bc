@@ -1,6 +1,6 @@
 import { useState } from "react"
 import Image from "next/image"
-import { getProductSlugs, getProduct, createCheckout } from "../helpers/shopify"
+import { callShopify, Slugs, getProduct, createCheckout } from "../helpers/shopify"
 
 function ProductDetails({ productData }) {
   const [isLoading, setIsLoading] = useState(false)
@@ -69,7 +69,8 @@ function ProductDetails({ productData }) {
 }
 
 export async function getStaticPaths() {
-  const productSlugs = await getProductSlugs()
+  const response = await callShopify(Slugs)
+  const productSlugs = response.data.products.edges
 
   const paths = productSlugs.map((slug) => {    
     const product = String(slug.node.handle)

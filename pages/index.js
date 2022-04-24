@@ -1,7 +1,7 @@
 import { Fragment } from "react"
 import ProductCard from "../components/ProductCard"
 
-import { getAllProducts } from "../helpers/shopify"
+import {  callShopify, AllProducts } from "../helpers/shopify"
 
 export default function Home({ products }) {
 
@@ -27,7 +27,8 @@ export default function Home({ products }) {
 }
 
 export async function getStaticProps() {
-  const products = await getAllProducts()
+  const response = await callShopify(AllProducts)
+  const products = response.data.products.edges
 
   return {
     props: {

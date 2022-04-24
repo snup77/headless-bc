@@ -1,7 +1,8 @@
 const domain = process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN
-const storefrontAccessToken = process.env.NEXT_PUBLIC_SHOPIFY_STORE_FRONT_ACCESS_TOKEN
+const storefrontAccessToken =
+  process.env.NEXT_PUBLIC_SHOPIFY_STORE_FRONT_ACCESS_TOKEN
 
-async function callShopify(query) {
+export async function callShopify(query, variables = {}) {
   const fetchUrl = `https://${domain}/api/2022-04/graphql.json`
 
   const fetchOptions = {
@@ -9,9 +10,9 @@ async function callShopify(query) {
     method: "POST",
     headers: {
       "X-Shopify-Storefront-Access-Token": storefrontAccessToken,
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify({ query }),
+    body: JSON.stringify({ query, variables }),
   }
 
   try {
@@ -24,8 +25,8 @@ async function callShopify(query) {
   }
 }
 
-export async function getAllProducts() {
-  const query = `{
+export const AllProducts = `
+  query Products {
     products(first: 22) {
       edges {
         node {
@@ -47,40 +48,23 @@ export async function getAllProducts() {
         }
       }
     }
-  }`
-  const response = await callShopify(query)
+  }
+`
 
-  const allProducts = response.data.products.edges
-    ? response.data.products.edges
-    : []
-
-  return allProducts
-}
-
-export async function getProductSlugs() {
-  const query =
-    `{
-      products(first: 22) {
-        edges {
-          node {
-            handle
-          }
+export const Slugs = `
+  query ProductSlugs {
+    products(first: 22) {
+      edges {
+        node {
+          handle
         }
       }
-    }`
-
-  const response = await callShopify(query);
-
-  const slugs = response.data.products.edges
-    ? response.data.products.edges
-    : []
-
-  return slugs
-}
+    }
+  }
+`
 
 export async function getProduct(handle) {
-  const query =
-    `{
+  const query = `{
       product(handle: "${handle}") {
         title
         description
@@ -106,19 +90,15 @@ export async function getProduct(handle) {
       }
     }`
 
-  const response = await callShopify(query);
+  const response = await callShopify(query)
 
-  const product = response.data.product
-    ? response.data.product
-    : []
+  const product = response.data.product ? response.data.product : []
 
   return product
 }
 
 export async function createCheckout(variantId) {
-
-  const query =
-    `mutation {
+  const query = `mutation {
       checkoutCreate(input: {
         lineItems: [{ variantId: "${variantId}", quantity: 1 }]
       }) {
@@ -137,7 +117,7 @@ export async function createCheckout(variantId) {
       }
     }`
 
-  const response = await callShopify(query);
+  const response = await callShopify(query)
 
   const checkout = response.data.checkoutCreate.checkout
     ? response.data.checkoutCreate.checkout
