@@ -25,7 +25,9 @@ export async function callShopify(query, variables = {}) {
   }
 }
 
-export const AllProducts = `
+const gql = String.raw
+
+export const AllProducts = gql`
   query Products {
     products(first: 22) {
       edges {
@@ -51,7 +53,7 @@ export const AllProducts = `
   }
 `
 
-export const Slugs = `
+export const Slugs = gql`
   query ProductSlugs {
     products(first: 22) {
       edges {
@@ -63,65 +65,41 @@ export const Slugs = `
   }
 `
 
-export async function getProduct(handle) {
-  const query = `{
-      product(handle: "${handle}") {
-        title
-        description
-        images(first: 10) {
-          edges {
-            node {
-              url
-            }
-          }
-        }
-        priceRange {
-          maxVariantPrice {
-            amount
-          }
-        }
-        variants(first: 1) {
-          edges {
-            node {
-              id
-            }
+export const singleProduct = gql`
+  query ProductDetails($handle: String!) {
+    product(handle: $handle) {
+      id
+      title
+      description
+      images(first: 10) {
+        edges {
+          node {
+            url
           }
         }
       }
-    }`
-
-  const response = await callShopify(query)
-
-  const product = response.data.product ? response.data.product : []
-
-  return product
-}
-
-export async function createCheckout(variantId) {
-  const query = `mutation {
-      checkoutCreate(input: {
-        lineItems: [{ variantId: "${variantId}", quantity: 1 }]
-      }) {
-        checkout {
-           id
-           webUrl
-           lineItems(first: 5) {
-             edges {
-               node {
-                 title
-                 quantity
-               }
-             }
-           }
+      priceRange {
+        maxVariantPrice {
+          amount
         }
       }
-    }`
+      variants(first: 1) {
+        edges {
+          node {
+            id
+          }
+        }
+      }
+    }
+  }`
 
-  const response = await callShopify(query)
-
-  const checkout = response.data.checkoutCreate.checkout
-    ? response.data.checkoutCreate.checkout
-    : []
-
-  return checkout
-}
+export const createCheckout = gql`
+mutation CreateCheckout($variantId: ID!) {
+  checkoutCreate(input: {
+    lineItems: [{ variantId: $variantId, quantity: 1 }]
+  }) {
+    checkout {
+       webUrl
+    }
+  }
+}`

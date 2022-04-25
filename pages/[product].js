@@ -1,6 +1,6 @@
 import { useState } from "react"
 import Image from "next/image"
-import { callShopify, Slugs, getProduct, createCheckout } from "../helpers/shopify"
+import { callShopify, Slugs, singleProduct, createCheckout } from "../helpers/shopify"
 
 function ProductDetails({ productData }) {
   const [isLoading, setIsLoading] = useState(false)
@@ -14,7 +14,8 @@ function ProductDetails({ productData }) {
   
   async function checkout() {
     setIsLoading(true)
-    const { webUrl } = await createCheckout(productVariant)
+    const response = await callShopify(createCheckout, { variantId: productVariant })
+    const { webUrl } = response.data.checkoutCreate.checkout
     window.location.href = webUrl
 
   }
@@ -86,7 +87,8 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }) {
-  const productData = await getProduct(params.product)  
+  const response = await callShopify(singleProduct, { handle: params.product })
+  const productData = response.data.product
 
   return {
     props: {
