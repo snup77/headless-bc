@@ -1,6 +1,6 @@
 import { useState } from "react"
 import Image from "next/image"
-import { callShopify, Slugs, singleProduct, createCheckout } from "../helpers/shopify"
+import { callGraphAPI, Slugs, singleProduct, createCheckout } from "../helpers/graphql-api"
 
 function ProductDetails({ productData }) {
   const [isLoading, setIsLoading] = useState(false)

@@ -3,11 +3,10 @@ import Link from "next/link"
 
 function ProductCard({ product }) {
 
-  const id = product.node.id
-  const handle = product.node.handle
-  const title = product.node.title
-  const image = product.node.images.edges[0].node.url
-  const price = product.node.priceRange.maxVariantPrice.amount.replace(/\.0/g, '')
+  const path = product.node.path
+  const name = product.node.name
+  const image = product.node.images.edges[0].node.urlOriginal
+  const price = product.node.prices.price.value
 
   return (
     <div
@@ -18,7 +17,7 @@ function ProductCard({ product }) {
     p-2
   "
     >
-      <Link href={`/${handle}`}>
+      <Link href={`${path}`}>
         <a aria-label="Mod Leather Sofa">
           <div className="h-72 flex justify-center items-center bg-gray-100 hover:bg-gray-200">
             <div className="flex flex-column justify-center items-center relative w-3/5 h-3/5">
@@ -34,7 +33,7 @@ function ProductCard({ product }) {
       </Link>
       <div>
         <p className="m-4 text-center text-l font-semibold mb-1">
-          {title}
+          {name}
         </p>
         <p className="text-center text-gray-700 mb-4">${price}</p>
       </div>

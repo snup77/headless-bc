@@ -1,15 +1,14 @@
-const domain = process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN
-const storefrontAccessToken =
-  process.env.NEXT_PUBLIC_SHOPIFY_STORE_FRONT_ACCESS_TOKEN
+const domain = process.env.NEXT_PUBLIC_BIGCOMMERCE_STORE_DOMAIN
+const authToken = process.env.NEXT_PUBLIC_BIGCOMMERCE_AUTH_BEARER_TOKEN
 
-export async function callShopify(query, variables = {}) {
-  const fetchUrl = `https://${domain}/api/2022-04/graphql.json`
+export async function callGraphAPI(query, variables = {}) {
+  const fetchUrl = `https://${domain}/graphql`
 
   const fetchOptions = {
     endpoint: fetchUrl,
     method: "POST",
     headers: {
-      "X-Shopify-Storefront-Access-Token": storefrontAccessToken,
+      "Authorization": "Bearer " + authToken,
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ query, variables }),
@@ -29,22 +28,25 @@ const gql = String.raw
 
 export const AllProducts = gql`
   query Products {
-    products(first: 22) {
-      edges {
-        node {
-          id
-          title
-          handle
-          images(first: 10) {
-            edges {
-              node {
-                url
+    site {
+      products(first: 23) {
+        edges {
+          node {
+            entityId
+            name
+            path
+            description
+            prices {
+              price {
+                value
               }
             }
-          }
-          priceRange {
-            maxVariantPrice {
-              amount
+            images {
+              edges {
+                node {
+                  urlOriginal
+                }
+              }
             }
           }
         }
@@ -91,15 +93,17 @@ export const singleProduct = gql`
         }
       }
     }
-  }`
+  }
+`
 
 export const createCheckout = gql`
-mutation CreateCheckout($variantId: ID!) {
-  checkoutCreate(input: {
-    lineItems: [{ variantId: $variantId, quantity: 1 }]
-  }) {
-    checkout {
-       webUrl
+  mutation CreateCheckout($variantId: ID!) {
+    checkoutCreate(
+      input: { lineItems: [{ variantId: $variantId, quantity: 1 }] }
+    ) {
+      checkout {
+        webUrl
+      }
     }
   }
-}`
+`

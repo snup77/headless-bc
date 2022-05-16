@@ -1,7 +1,7 @@
 import { Fragment } from "react"
 import ProductCard from "../components/ProductCard"
 
-import {  callShopify, AllProducts } from "../helpers/shopify"
+import {  callGraphAPI, AllProducts } from "../helpers/graphql-api"
 
 export default function Home({ products }) {
 
@@ -18,7 +18,7 @@ export default function Home({ products }) {
       <div className="max-w-7xl flex flex-1 flex-wrap flex-row mx-auto px-6 pt-10">
       {
           products.map((product) => (
-            <ProductCard key={product.node.id} product={product} />
+            <ProductCard key={product.node.entityId} product={product} />
         ))
       }
       </div>
@@ -27,8 +27,8 @@ export default function Home({ products }) {
 }
 
 export async function getStaticProps() {
-  const response = await callShopify(AllProducts)
-  const products = response.data.products.edges
+  const response = await callGraphAPI(AllProducts)
+  const products = response.data.site.products.edges
 
   return {
     props: {
