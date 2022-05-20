@@ -56,11 +56,13 @@ export const AllProducts = gql`
 `
 
 export const Slugs = gql`
-  query ProductSlugs {
-    products(first: 22) {
-      edges {
-        node {
-          handle
+  query Products {
+    site {
+      products(first: 23) {
+        edges {
+          node {
+            path
+          }
         }
       }
     }
@@ -68,42 +70,29 @@ export const Slugs = gql`
 `
 
 export const singleProduct = gql`
-  query ProductDetails($handle: String!) {
-    product(handle: $handle) {
-      id
-      title
-      description
-      images(first: 10) {
-        edges {
-          node {
-            url
+query LookUpUrl( $path: String!) {
+  site {
+    route(path: $path) {
+      node {
+        ... on Product {
+          id
+          name
+          description
+          prices {
+            price {
+              value
+            }
           }
-        }
-      }
-      priceRange {
-        maxVariantPrice {
-          amount
-        }
-      }
-      variants(first: 1) {
-        edges {
-          node {
-            id
+          images {
+            edges {
+              node {
+                urlOriginal
+              }
+            }
           }
         }
       }
     }
   }
-`
-
-export const createCheckout = gql`
-  mutation CreateCheckout($variantId: ID!) {
-    checkoutCreate(
-      input: { lineItems: [{ variantId: $variantId, quantity: 1 }] }
-    ) {
-      checkout {
-        webUrl
-      }
-    }
-  }
+} 
 `

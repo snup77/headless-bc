@@ -1,22 +1,22 @@
 import { useState } from "react"
 import Image from "next/image"
-import { callGraphAPI, Slugs, singleProduct, createCheckout } from "../helpers/graphql-api"
+import { callGraphAPI, Slugs, singleProduct } from "../helpers/graphql-api"
 
 function ProductDetails({ productData }) {
   const [isLoading, setIsLoading] = useState(false)
 
   const imageNode = productData.images.edges[0].node
-  const title = productData.title
-  const price = productData.priceRange.maxVariantPrice.amount.replace(/\.0/g, '')
+  const title = productData.name
+  const price = productData.prices.price.value
   const description = productData.description
-  const productVariant = productData.variants.edges[0].node.id
 
   
   async function checkout() {
     setIsLoading(true)
-    const response = await callShopify(createCheckout, { variantId: productVariant })
-    const { webUrl } = response.data.checkoutCreate.checkout
-    window.location.href = webUrl
+    // const response = await callShopify(createCheckout, { variantId: productVariant })
+    // const { webUrl } = response.data.checkoutCreate.checkout
+    // window.location.href = webUrl
+    console.log("buy")
 
   }
   
@@ -33,7 +33,7 @@ function ProductDetails({ productData }) {
       <div className="w-full flex flex-1 bg-gray-100">
         <div className="h-96 py-16 p10 flex flex-1 justify-center items-center w-full h-full relative">
           <Image
-            src={imageNode.url}
+            src={imageNode.urlOriginal}
             alt="Inventory item"
             className="object-scale-down max-h-full"
             layout='fill'
@@ -70,11 +70,11 @@ function ProductDetails({ productData }) {
 }
 
 export async function getStaticPaths() {
-  const response = await callShopify(Slugs)
-  const productSlugs = response.data.products.edges
+  const response = await callGraphAPI(Slugs)
+  const productSlugs = response.data.site.products.edges
 
   const paths = productSlugs.map((slug) => {    
-    const product = String(slug.node.handle)
+    const product = String(slug.node.path).replaceAll("/", "")
     return {
       params: { product }
     }
@@ -87,8 +87,9 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }) {
-  const response = await callShopify(singleProduct, { handle: params.product })
-  const productData = response.data.product
+  const path = "/" + params.product + "/"
+  const response = await callGraphAPI(singleProduct, { path })
+  const productData = response.data.site.route.node
 
   return {
     props: {
