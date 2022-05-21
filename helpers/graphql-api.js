@@ -76,6 +76,7 @@ query LookUpUrl( $path: String!) {
       node {
         ... on Product {
           id
+          entityId
           name
           description
           prices {

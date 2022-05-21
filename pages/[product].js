@@ -1,6 +1,7 @@
 import { useState } from "react"
 import Image from "next/image"
 import { callGraphAPI, Slugs, singleProduct } from "../helpers/graphql-api"
+import { createCheckout } from "../helpers/checkout"
 
 function ProductDetails({ productData }) {
   const [isLoading, setIsLoading] = useState(false)
@@ -9,15 +10,15 @@ function ProductDetails({ productData }) {
   const title = productData.name
   const price = productData.prices.price.value
   const description = productData.description
+  const productId = productData.entityId
 
   
   async function checkout() {
     setIsLoading(true)
-    // const response = await callShopify(createCheckout, { variantId: productVariant })
-    // const { webUrl } = response.data.checkoutCreate.checkout
-    // window.location.href = webUrl
-    console.log("buy")
-
+    const response = await createCheckout(productId)
+    console.log(response)
+    const webUrl = response.data.redirect_urls.checkout_url
+    window.location.href = webUrl
   }
   
   return (
