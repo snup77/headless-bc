@@ -2,7 +2,7 @@ const storeHash = process.env.NEXT_PUBLIC_BIGCOMMERCE_STORE_HASH
 const xAuthToken = process.env.NEXT_PUBLIC_BIGCOMMERCE_X_AUTH_TOKEN
 
 export async function createCheckout(productId) {
-    const fetchUrl = `https://api.bigcommerce.com/stores/${storeHash}/v3/carts?include=redirect_urls`
+    const fetchUrl = `/api/bigcommerce`
   
     const fetchOptions = {
       endpoint: fetchUrl,
